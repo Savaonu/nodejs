@@ -19,7 +19,7 @@ pipeline {
                 // sh "docker build ."
 
                 // Create container
-                sh "docker run -p 3000:3000 --name $container_name $image_name"
+                sh "docker run -p 3000:3000 -d --name $container_name $image_name"
             }
         }
     }
