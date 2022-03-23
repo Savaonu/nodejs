@@ -3,6 +3,7 @@ pipeline {
         image_name = "nodejs_image"
         container_name = "my_nodejs_app"
         dockerhub_image = "savaonu/${image_name}"
+        prod_srv = "192.168.0.1"
     }
     agent any
 
@@ -38,6 +39,19 @@ pipeline {
                     sh "chmod +x ./deploy.sh && ./deploy.sh ${repo_username} ${repo_passw} ${image_name} ${dockerhub_image}"
                  // some block
                 }
+            }
+        }
+        stage('Deploy to prod'){
+            steps {
+                // Transfer the image to prod env 
+                
+                withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
+                    sh "sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} "bash -s" < ./cleanup.sh"
+                    sh "docker save ${image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
+                    sh "sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${container_name} ${image_name}"
+                }
+                
+
             }
         }
         stage('Email'){
