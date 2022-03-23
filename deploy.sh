@@ -3,6 +3,6 @@
 
 echo $2 | docker login -u $1 --password-stdin
 
-docker tag nodejs_image:latest savaonu/nodejs
+docker tag $3 $4
 
-docker push savaonu/nodejs
+docker push $4

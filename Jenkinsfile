@@ -2,7 +2,7 @@ pipeline {
     environment {
         image_name = "nodejs_image"
         container_name = "my_nodejs_app"
-        dockerhub_user = "savaonu"
+        dockerhub_image = "savaonu/${image_name}"
     }
     agent any
 
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 // Push to Dockerhub repo
                 withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
-                    sh "chmod +x ./deploy.sh && ./deploy.sh ${repo_username} ${repo_passw}"
+                    sh "chmod +x ./deploy.sh && ./deploy.sh ${repo_username} ${repo_passw} ${image_name} ${dockerhub_image}"
                  // some block
                 }
             }
@@ -52,7 +52,7 @@ pipeline {
         stage('Clean image pushed to Dockerhub'){
             steps {
                 // Delete the image pushed to Dockehub
-                sh "docker rmi --force ${dockerhub_user}/${image_name}"
+                sh "docker rmi --force ${dockerhub_image}"
             }
         }
 
