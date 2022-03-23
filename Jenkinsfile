@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    stages {
+    try {
         stage('Fetch git') {
             steps {
                 // Get some code from a GitHub repository
@@ -33,5 +33,25 @@ pipeline {
                 
             }
         }
+        stage('Email') {
+            steps {
+                // Info via email
+                mail body: 'project build successful',
+                     from: 'jenkins@test.com',
+                     subject: 'project build successful',
+                     to: 'alexandru.sava@acccesa.eu'
+            }
+        }
+    }
+    catch (err) {
+
+        currentBuild.result = "FAILURE"
+
+            mail body: "project build error is here: ${env.BUILD_URL}" ,
+            from: 'jenkins@test.com',
+            subject: 'project build failed',
+            to: 'alexandru.sava@acccesa.eu'
+
+        throw err
     }
 }
