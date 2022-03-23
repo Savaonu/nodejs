@@ -32,15 +32,15 @@ pipeline {
                 
             }
         }
-        stage('Email'){
-            steps {
+        //stage('Email'){
+        //    steps {
                 // Info via email
-                mail body: 'project build successful',
-                    from: 'jenkins@test.com',
-                    subject: 'project build successful',
-                    to: 'alexandru.sava@acccesa.eu'
-            }
-        }
+        //        mail body: 'project build successful',
+        //            from: 'jenkins@test.com',
+        //            subject: 'project build successful',
+        //            to: 'alexandru.sava@acccesa.eu'
+        //    }
+        //}
 
      }
 }
