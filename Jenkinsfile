@@ -1,7 +1,5 @@
 pipeline {
     agent any
-    withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
-    // some block
 }
     stages {
         stage('Fetch git'){
@@ -31,8 +29,10 @@ pipeline {
         stage('Deploy'){
             steps {
                 // Push to DockerHub Repo
-                sh "chmod +x ./deploy.sh && ./deploy.sh $repo_username $repo_passw "
-                
+                withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
+                    sh "chmod +x ./deploy.sh && ./deploy.sh $repo_username $repo_passw "
+                 // some block
+                }
             }
         }
         //stage('Email'){
