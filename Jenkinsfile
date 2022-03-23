@@ -46,6 +46,7 @@ pipeline {
                 // Transfer the image to prod env 
                 
                 withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
+                    sh " echo ${prod_user} ${prod_passw} "
                     sh "sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} 'bash -s' < ./cleanup.sh"
                     sh "docker save ${image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
                     sh "sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${container_name} ${image_name}"
