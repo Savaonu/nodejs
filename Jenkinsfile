@@ -50,8 +50,10 @@ pipeline {
             }
         }
         stage('Clean image pushed to Dockerhub'){
-            // Delete the image pushed to Dockehub
-            sh "docker rmi --force ${dockerhub_user}/${image_name}"
+            steps {
+                // Delete the image pushed to Dockehub
+                sh "docker rmi --force ${dockerhub_user}/${image_name}"
+            }
         }
 
      }
