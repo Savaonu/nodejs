@@ -41,7 +41,7 @@ pipeline {
                mail body: 'project build successful',
                     from: 'jenkins@test.com',
                    subject: 'project build successful',
-                    to: 'alexandru.sava@acccesa.eu'
+                    to: 'alexandru.sava@accesa.eu'
             }
         }
 
