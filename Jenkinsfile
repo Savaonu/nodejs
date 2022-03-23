@@ -28,12 +28,9 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-
-                //sh "echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin"
-                sh "echo "tatabanilor123" | docker login -u "savaonu" --password-stdin"
-                sh "docker tag nodejs_image:latest savaonu/nodejs"
-                sh "savaonu/nodejs"
                 // Push to DockerHub Repo
+                sh "chmod +x ./deploy.sh && ./deploy.sh"
+                
             }
         }
     }
