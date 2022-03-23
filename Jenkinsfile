@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     stages {
         stage('Fetch git'){
             steps {
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 // Push to DockerHub Repo
                 withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
-                    sh "chmod +x ./deploy.sh && ./deploy.sh $repo_username $repo_passw "
+                    sh "chmod +x ./deploy.sh && ./deploy.sh ${repo_username} ${repo_passw}"
                  // some block
                 }
             }
