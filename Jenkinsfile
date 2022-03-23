@@ -1,6 +1,6 @@
 pipeline {
     environment {
-        image_name = "nodejs_image"
+        image_name = "nodejs"
         container_name = "my_nodejs_app"
         dockerhub_image = "savaonu/${image_name}"
         prod_srv = "192.168.0.1"
