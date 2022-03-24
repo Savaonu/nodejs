@@ -57,8 +57,14 @@ pipeline {
 
             }
         }
-        stage('Parallel test') {
+        stage('Parallel win/lin jobs') {
             parallel {   
+                stage('Clean image pushed to Dockerhub'){
+                    steps {
+                        // Delete the image pushed to Dockehub
+                        sh "docker rmi --force ${dockerhub_image}"
+                    }
+                }
                 stage('Email'){
                     agent {
                         label "win_node"
@@ -66,12 +72,6 @@ pipeline {
                     steps {
                         // Info via email
                         emailext body: 'All goood senor', subject: 'Project build successfull', to: 'alexandru.sava@accesa.eu'
-                    }
-                }
-                stage('Clean image pushed to Dockerhub'){
-                    steps {
-                        // Delete the image pushed to Dockehub
-                        sh "docker rmi --force ${dockerhub_image}"
                     }
                 }
             }
