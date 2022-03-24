@@ -6,7 +6,7 @@ pipeline {
         prod_srv = "192.168.0.17"
     }
     agent {
-            label "win_node"
+            label "lin_node"
         }
 
     stages {
@@ -62,7 +62,7 @@ pipeline {
                 stage('Clean image pushed to Dockerhub'){
                     steps {
                         // Delete the image pushed to Dockehub
-                        sh "docker rmi --force ${dockerhub_image}"
+                        sh "docker rmi --forsce ${dockerhub_image}"
                     }
                 }
                 stage('Email'){
