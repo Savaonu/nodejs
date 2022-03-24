@@ -38,7 +38,7 @@ pipeline {
             steps {
                 // Push to Dockerhub repo
                 withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
-                    sh "chmod +sadx ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${image_name} ${dockerhub_image}"
+                    sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${image_name} ${dockerhub_image}"
                  // some block
                 }
             }
@@ -62,7 +62,7 @@ pipeline {
                 stage('Clean image pushed to Dockerhub'){
                     steps {
                         // Delete the image pushed to Dockehub
-                        sh "docker rmi --forsce ${dockerhub_image}"
+                        sh "docker rmi --force ${dockerhub_image}"
                     }
                 }
                 stage('Email'){
