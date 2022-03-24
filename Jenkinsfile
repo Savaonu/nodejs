@@ -5,7 +5,9 @@ pipeline {
         dockerhub_image = "savaonu/${image_name}"
         prod_srv = "192.168.0.17"
     }
-    agent any
+    agent {
+            label "lin_node"
+        }
 
     stages {
         stage('Fetch git'){
@@ -59,7 +61,7 @@ pipeline {
             parallel {   
                 stage('Email'){
                     agent {
-                        label "Windows-node"
+                        label "win_node"
                     }
                     steps {
                         // Info via email
