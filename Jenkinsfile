@@ -6,7 +6,7 @@ pipeline {
         prod_srv = "192.168.0.17"
     }
     agent {
-            label "lin_node"
+            label "win_node"
         }
 
     stages {
