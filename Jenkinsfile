@@ -80,13 +80,14 @@ pipeline {
      }
      post {
          always {
-             steps {
                 // Info via email about failed job
                mail body: 'Not good senor',
                     from: 'jenkins@test.com',
                    subject: 'project build unsuccessful',
                     to: 'alexandru.sava@accesa.eu'
-            }
          }
-     }
-}
+        failure {  
+             mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
+            } 
+    }
+ }
