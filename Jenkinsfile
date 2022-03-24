@@ -86,7 +86,7 @@ pipeline {
                 subject: 'project build unsuccessful',
                 to: 'alexandru.sava@accesa.eu'
          }
-        always {  
+        success {  
              mail body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
         } 
     }
