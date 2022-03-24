@@ -71,7 +71,7 @@ pipeline {
                     }
                     steps {
                         // Info via email
-                        emailext body: 'All goood senor', subject: 'Project build successfull', to: 'alexandru.sava@accesa.eu'
+                        emailext body: "<b>Project build successfull</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "Successfull CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";
                     }
                 }
             }
@@ -87,7 +87,7 @@ pipeline {
                 to: 'alexandru.sava@accesa.eu'
          }
         success {  
-             mail body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
+             mail body: "<b>Project build unsuccessfull</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
         } 
     }
  }
