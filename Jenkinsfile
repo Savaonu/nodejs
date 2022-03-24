@@ -55,19 +55,23 @@ pipeline {
 
             }
         }
-        stage('Email'){
-            steps {
-                // Info via email
-               mail body: 'project build successful',
-                    from: 'jenkins@test.com',
-                   subject: 'project build successful',
-                    to: 'alexandru.sava@accesa.eu'
-            }
-        }
-        stage('Clean image pushed to Dockerhub'){
-            steps {
-                // Delete the image pushed to Dockehub
-                sh "docker rmi --force ${dockerhub_image}"
+        stage('Parallel test') {
+            parallel {   
+                stage('Email'){
+                    steps {
+                        // Info via email
+                    mail body: 'project build successful',
+                            from: 'jenkins@test.com',
+                        subject: 'project build successful',
+                            to: 'alexandru.sava@accesa.eu'
+                    }
+                }
+                stage('Clean image pushed to Dockerhub'){
+                    steps {
+                        // Delete the image pushed to Dockehub
+                        sh "docker rmi --force ${dockerhub_image}"
+                    }
+                }
             }
         }
 
