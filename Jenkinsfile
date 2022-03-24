@@ -78,4 +78,15 @@ pipeline {
         }
 
      }
+     post {
+         failure {
+             steps {
+                // Info via email about failed job
+               mail body: 'Not good senor',
+                    from: 'jenkins@test.com',
+                   subject: 'project build unsuccessful',
+                    to: 'alexandru.sava@accesa.eu'
+            }
+         }
+     }
 }
