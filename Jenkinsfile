@@ -79,7 +79,7 @@ pipeline {
 
      }
      post {
-         failure {
+         always {
              steps {
                 // Info via email about failed job
                mail body: 'Not good senor',
