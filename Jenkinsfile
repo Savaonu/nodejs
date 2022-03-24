@@ -58,12 +58,12 @@ pipeline {
         stage('Parallel test') {
             parallel {   
                 stage('Email'){
+                    agent {
+                        label "Windows-node"
+                    }
                     steps {
                         // Info via email
-                    mail body: 'project build successful',
-                            from: 'jenkins@test.com',
-                        subject: 'project build successful',
-                            to: 'alexandru.sava@accesa.eu'
+                        emailext subject: 'Build project successfull', to: 'alexandru.sava@accesa.eu'
                     }
                 }
                 stage('Clean image pushed to Dockerhub'){
