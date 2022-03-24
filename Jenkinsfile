@@ -63,7 +63,7 @@ pipeline {
                     }
                     steps {
                         // Info via email
-                        emailext subject: 'Build project successfull', to: 'alexandru.sava@accesa.eu'
+                        emailext body: 'All goood senor', subject: 'test', to: 'alexandru.sava@accesa.eu'
                     }
                 }
                 stage('Clean image pushed to Dockerhub'){
