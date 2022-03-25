@@ -72,7 +72,7 @@ pipeline {
                             //println ret
 
 
-                            sh "ls -l > docker_running"
+                            sh "\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) > docker_running"
                             result = readFile('docker_running').trim()
                             println result
 
