@@ -59,47 +59,7 @@ pipeline {
             }
         }
 
-        stage('Check containers') {
-            parallel {
-                stage('Check containers test ') {
-                    steps {
-                        script {
-                            sh "docker_running=\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
-                            if ( $docker_running == 2) {
-                                echo "The nodejs container is up and running"
-                            }
-                            else if ($docker_running > 2) {
-                                echo "ERROR: please the env. There are more containers running "
-                            }
-                            else {
-                                echo "ERROR: the container is not running"
-                            }
-                        }
-
-                    }
-                }
-                stage('Check containers prod') {
-                    steps {
-                        script {
-                            withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
-                                // Clean old containers
-                                sh "docker_running=\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l )"
-                            }
-                            if ( $docker_running == 2) {
-                                echo "The nodejs container on prod is up and running"
-                            }
-                            else if ($docker_running > 2) {
-                                echo "ERROR: please the env. There are more containers running on prod "
-                            }
-                            else {
-                                echo "ERROR: the container is not running on prod"
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
+        
 
         }
         stage('Parallel win/lin jobs') {
@@ -135,6 +95,7 @@ pipeline {
         } 
     }
 }
- def sendEmail(status) {
+
+def sendEmail(status) {
     mail body: "<b>Project build </b>" + "<b>$status</b>"   + "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: status + "  CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";
 }
