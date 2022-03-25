@@ -43,7 +43,7 @@ pipeline {
                 }
             }
         }
-        stage('Deploy to prod'){
+      /*  stage('Deploy to prod'){
             steps {
                 // Transfer the image to prod env 
                 withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
@@ -57,8 +57,8 @@ pipeline {
                 
 
             }
-        }
-        /*
+        }*/
+        
         stage('Check containers') {
             parallel {
                 stage('Check containers test ') {
@@ -79,7 +79,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
                 /*
                 stage('Check containers prod') {
                     steps {
