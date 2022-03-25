@@ -13,13 +13,13 @@ pipeline {
         stage('Fetch git'){
             steps {
                 // Get some code from a GitHub repository
-                git 'https://github.com/Savaonu/nodejsss'
+                git 'https://github.com/Savaonu/nodejs'
 
                     }
         } 
         stage('Cleanup old Containers'){
             steps {
-                // Clean old images
+                // Clean old containers
                 sh "chmod +x ./cleanup.sh && ./cleanup.sh "
                 
             }
@@ -46,11 +46,12 @@ pipeline {
         stage('Deploy to prod'){
             steps {
                 // Transfer the image to prod env 
-                
                 withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
-                    sh " echo ${prod_user} ${prod_passw} "
+                    // Clean old containers
                     sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} \"bash -s\" < ./cleanup.sh"
+                    // Copy the image to 'prod'
                     sh "docker save ${image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
+                    // Start app on 'prod'
                     sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${container_name} ${image_name}"
                 }
                 
@@ -67,10 +68,11 @@ pipeline {
                 }
                 stage('Email'){
                     agent {
+                        // Run on windows node 
                         label "win_node"
                     }
                     steps {
-                        // Info via email
+                        // Info via email from windows node
                         emailext body: "<b>Project build successful</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "SUCCESSFUL CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";
                     }
                 }
@@ -81,20 +83,14 @@ pipeline {
      post {
          failure {
                 // Info via email about failed job
-          //  mail body: "<b>Project build failed</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "FAILED CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu"; 
              sendEmail("Failed");
          }
         unsuccessful {  
               // Info via email about unsuccessful job 
-            // mail body: "<b>Project build unsuccessful</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "UNSUCCESSFUL CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
             sendEmail("Unsuccessful");
         } 
     }
  }
  def sendEmail(status) {
-    //mail(
-      //      to: "$EMAIL_RECIPIENTS",
-        //    subject: "Build $BUILD_NUMBER - " + status + " (${currentBuild.fullDisplayName})",
-          //  body: "Changes:\n " + getChangeString() + "\n\n Check console output at: $BUILD_URL/console" + "\n")
     mail body: "<b>Project build </b>" + "<b>$status</b>"   + "<br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: status + "  CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";
 }
