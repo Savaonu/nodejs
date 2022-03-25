@@ -65,9 +65,18 @@ pipeline {
                     steps {
                         script {
                             // sh "docker_running=\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
-                            docker_running = sh "\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
-                            println docker_running
-                            if ( docker_running != null) {
+                           // docker_running = sh "\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
+                            //println docker_running
+
+                            //def ret = sh(script: 'uname', returnStdout: true)
+                            //println ret
+
+
+                            sh "ls -l > docker_running"
+                            result = readFile('docker_running').trim()
+                            println result
+
+                            if ( result != null) {
                                 println "The nodejs container is up and running"
                             }
                            // else if ($docker_running > 2) {
