@@ -43,7 +43,7 @@ pipeline {
                 }
             }
         }
-      /*  stage('Deploy to prod'){
+        stage('Deploy to prod'){
             steps {
                 // Transfer the image to prod env 
                 withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
@@ -57,21 +57,13 @@ pipeline {
                 
 
             }
-        }*/
+        }
         
         stage('Check containers') {
             parallel {
                 stage('Check containers test ') {
                     steps {
                         script {
-                            // sh "docker_running=\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
-                           // docker_running = sh "\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
-                            //println docker_running
-
-                            //def ret = sh(script: 'uname', returnStdout: true)
-                            //println ret
-
-
                             sh "docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running"
                             result = readFile('docker_running').trim()
                             println result
@@ -79,9 +71,9 @@ pipeline {
                             if ( result != null) {
                                 println "The nodejs container is up and running"
                             }
-                           // else if ($docker_running > 2) {
-                            //    echo "ERROR: please the env. There are more containers running "
-                           // }
+                            else if ($result > 2) {
+                                echo "ERROR: please the env. There are more containers running "
+                            }
                             else {
                                 println "ERROR: the container is not running"
                             }
@@ -89,20 +81,21 @@ pipeline {
 
                     }
                 }
-            }
-        }
-                /*
+            
+        
+                
                 stage('Check containers prod') {
                     steps {
                         script {
                             withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
                                 // Clean old containers
-                                sh "docker_running=\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l )"
+                                sh "docker_running=\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running"
+                                result = readFile('docker_running').trim()
                             }
-                            if ( $docker_running == 2) {
+                            if ( result == 2) {
                                 echo "The nodejs container on prod is up and running"
                             }
-                            else if ($docker_running > 2) {
+                            else if (result > 2) {
                                 echo "ERROR: please the env. There are more containers running on prod "
                             }
                             else {
@@ -114,7 +107,7 @@ pipeline {
                 }
             }
         }
-        */
+        
         stage('Parallel win/lin jobs') {
             parallel {   
                 stage('Clean image pushed to Dockerhub'){
