@@ -65,14 +65,14 @@ pipeline {
                     steps {
                         script {
                             sh "docker_running=\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
-                            if ( $docker_running != null) {
-                                echo "The nodejs container is up and running"
+                            if ( docker_running != null) {
+                                println "The nodejs container is up and running"
                             }
                            // else if ($docker_running > 2) {
                             //    echo "ERROR: please the env. There are more containers running "
                            // }
                             else {
-                                echo "ERROR: the container is not running"
+                                println "ERROR: the container is not running"
                             }
                         }
 
