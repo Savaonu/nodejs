@@ -78,6 +78,8 @@ pipeline {
 
                     }
                 }
+            }
+        }
                 /*
                 stage('Check containers prod') {
                     steps {
