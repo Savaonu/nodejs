@@ -64,7 +64,7 @@ pipeline {
                 stage('Check containers test ') {
                     steps {
                         script {
-                            def docker_running = $(docker ps -f status=running  -f name=my_nodejs_app | wc -l)
+                            sh " docker_running = $(docker ps -f status=running  -f name=my_nodejs_app | wc -l)"
                             if ( $docker_running == 2) {
                                 echo "The nodejs container is up and running"
                             }
@@ -83,7 +83,7 @@ pipeline {
                         script {
                             withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
                                 // Clean old containers
-                                def docker_running = $(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l )
+                                sh "docker_running = $(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l )"
                             }
                             if ( $docker_running == 2) {
                                 echo "The nodejs container on prod is up and running"
