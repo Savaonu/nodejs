@@ -58,19 +58,19 @@ pipeline {
 
             }
         }
-        /*
+        
         stage('Check containers') {
             parallel {
                 stage('Check containers test ') {
                     steps {
                         script {
                             sh "docker_running=\$(docker ps -f status=running  -f name=my_nodejs_app | wc -l) "
-                            if ( $docker_running == 2) {
+                            if ( $docker_running != null) {
                                 echo "The nodejs container is up and running"
                             }
-                            else if ($docker_running > 2) {
-                                echo "ERROR: please the env. There are more containers running "
-                            }
+                           // else if ($docker_running > 2) {
+                            //    echo "ERROR: please the env. There are more containers running "
+                           // }
                             else {
                                 echo "ERROR: the container is not running"
                             }
@@ -78,6 +78,7 @@ pipeline {
 
                     }
                 }
+                /*
                 stage('Check containers prod') {
                     steps {
                         script {
