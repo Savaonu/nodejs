@@ -19,7 +19,7 @@ pipeline {
         } 
         stage('Cleanup old Containers'){
             steps {
-                // Clean old images
+                // Clean old containers
                 sh "chmod +x ./cleanup.sh && ./cleanup.sh "
                 
             }
@@ -39,7 +39,6 @@ pipeline {
                 // Push to Dockerhub repo
                 withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
                     sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${image_name} ${dockerhub_image}"
-                 // some block
                 }
             }
         }
@@ -48,9 +47,11 @@ pipeline {
                 // Transfer the image to prod env 
                 
                 withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
-                    sh " echo ${prod_user} ${prod_passw} "
+                    // Clean old containers
                     sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} \"bash -s\" < ./cleanup.sh"
+                    // Transfer a copy of the image to prod
                     sh "docker save ${image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
+                    // Start app on prod
                     sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${container_name} ${image_name}"
                 }
                 
@@ -81,11 +82,17 @@ pipeline {
      post {
          failed {
                 // Info via email about failed job
-            mail body: "<b>Project build failed</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "FAILED CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu"; 
+            sendEmail("Failed"); 
          }
         unsuccessful {  
               // Info via email about unsuccessful job 
-             mail body: "<b>Project build unsuccessful</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "UNSUCCESSFUL CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
+             sendEmail("Unsuccessful");  
         } 
     }
  }
+ def sendEmail(status) {
+    mail(
+            to: "$EMAIL_RECIPIENTS",
+            subject: "Build $BUILD_NUMBER - " + status + " (${currentBuild.fullDisplayName})",
+            body: "Changes:\n " + getChangeString() + "\n\n Check console output at: $BUILD_URL/console" + "\n")
+            mail body: "<b>Project build failed</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "FAILED CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";
