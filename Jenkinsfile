@@ -19,7 +19,7 @@ pipeline {
         } 
         stage('Cleanup old Containers'){
             steps {
-                // Clean old containers
+                // Clean old images
                 sh "chmod +x ./cleanup.sh && ./cleanup.sh "
                 
             }
@@ -39,6 +39,7 @@ pipeline {
                 // Push to Dockerhub repo
                 withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
                     sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${image_name} ${dockerhub_image}"
+                 // some block
                 }
             }
         }
@@ -47,11 +48,9 @@ pipeline {
                 // Transfer the image to prod env 
                 
                 withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
-                    // Clean old containers
+                    sh " echo ${prod_user} ${prod_passw} "
                     sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} \"bash -s\" < ./cleanup.sh"
-                    // Transfer a copy of the image to prod
                     sh "docker save ${image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
-                    // Start app on prod
                     sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${container_name} ${image_name}"
                 }
                 
@@ -90,4 +89,3 @@ pipeline {
         } 
     }
  }
- 
