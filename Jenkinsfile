@@ -58,6 +58,7 @@ pipeline {
 
             }
         }
+        /*
         stage('Check containers') {
             parallel {
                 stage('Check containers test ') {
@@ -99,9 +100,7 @@ pipeline {
                 }
             }
         }
-
-
-
+        */
         stage('Parallel win/lin jobs') {
             parallel {   
                 stage('Clean image pushed to Dockerhub'){
