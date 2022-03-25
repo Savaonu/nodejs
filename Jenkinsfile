@@ -81,21 +81,11 @@ pipeline {
      post {
          always {
                 // Info via email about failed job
-<<<<<<< HEAD
-            mail body: 'Not good senor',
-                from: 'jenkins@test.com',
-                subject: 'project build unsuccessful',
-                to: 'alexandru.sava@accesa.eu'
-         }
-        success {  
-             mail body: "<b>Project build unsuccessfull</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
-=======
             mail body: "<b>Project build failed</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "FAILED CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu"; 
          }
         unsuccessful {  
               // Info via email about unsuccessful job 
              mail body: "<b>Project build unsuccessful</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", charset: 'UTF-8', from: 'jenkins@test.com', mimeType: 'text/html', replyTo: '', subject: "UNSUCCESSFUL CI: Project name -> ${env.JOB_NAME}", to: "alexandru.sava@accesa.eu";  
->>>>>>> parent of 9465ef1 (Update Jenkinsfile)
         } 
     }
  }
