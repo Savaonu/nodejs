@@ -58,6 +58,50 @@ pipeline {
 
             }
         }
+
+        stage('Check containers') {
+            parallel {
+                stage('Check containers test ') {
+                    steps {
+                        script {
+                            def docker_running = $(docker ps -f status=running  -f name=my_nodejs_app | wc -l)
+                            if ( $docker_running == 2) {
+                                echo "The nodejs container is up and running"
+                            }
+                            else if ($docker_running > 2)) {
+                                echo "ERROR: please the env. There are more containers running "
+                            }
+                            else {
+                                echo "ERROR: the container is not running"
+                            }
+                        }
+
+                    }
+                }
+                stage('Check containers prod') {
+                    steps {
+                        script {
+                            withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
+                                // Clean old containers
+                                def docker_running = $(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l )
+                            }
+                            if ( $docker_running == 2) {
+                                echo "The nodejs container on prod is up and running"
+                            }
+                            else if ($docker_running > 2)) {
+                                echo "ERROR: please the env. There are more containers running on prod "
+                            }
+                            else {
+                                echo "ERROR: the container is not running on prod"
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+        }
         stage('Parallel win/lin jobs') {
             parallel {   
                 stage('Clean image pushed to Dockerhub'){
