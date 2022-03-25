@@ -68,7 +68,7 @@ pipeline {
                             if ( $docker_running == 2) {
                                 echo "The nodejs container is up and running"
                             }
-                            else if ($docker_running > 2)) {
+                            else if ($docker_running > 2) {
                                 echo "ERROR: please the env. There are more containers running "
                             }
                             else {
@@ -88,7 +88,7 @@ pipeline {
                             if ( $docker_running == 2) {
                                 echo "The nodejs container on prod is up and running"
                             }
-                            else if ($docker_running > 2)) {
+                            else if ($docker_running > 2) {
                                 echo "ERROR: please the env. There are more containers running on prod "
                             }
                             else {
