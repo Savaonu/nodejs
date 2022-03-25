@@ -58,7 +58,7 @@ pipeline {
 
             }
         }
-        
+        /*
         stage('Check containers') {
             parallel {
                 stage('Check containers test ') {
@@ -79,7 +79,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
                 /*
                 stage('Check containers prod') {
                     steps {
