@@ -99,17 +99,17 @@ pipeline {
                                 int res = result as int
                                 println result
                                 println res
+                                if (res == 2) {
+                                    println "The nodejs container is up and running"
+                                }
+                                else if (res > 2) {
+                                    println "ERROR: please the env. There are more containers running "
+                                    //currentBuild.result = 'FAILED'
+                                }
+                                else {
+                                    println "ERROR: the container is not running"
+                                    //currentBuild.result = 'FAILED'
                             }
-                            if (res == 2) {
-                                println "The nodejs container on prod is up and running"
-                            }
-                            else if (res > 2) {
-                                println "ERROR: please the env. There are more containers running on prod "
-                                //currentBuild.result = 'FAILED'
-                            }
-                            else {
-                                println "ERROR: the container is not running on prod"
-                                //currentBuild.result = 'FAILED'
                             }
                         }
 
