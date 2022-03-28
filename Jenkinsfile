@@ -67,6 +67,7 @@ pipeline {
                             result = readFile('docker_running').trim()
                             int res = result as int
                             println result
+                            println res
 
                             if (res == 2) {
                                 println "The nodejs container is up and running"
