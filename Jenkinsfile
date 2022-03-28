@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Fetch git'){
             steps {
-                // Get some code from a GitHub repository
+                // Get code from GitHub repository
                 git 'https://github.com/Savaonu/nodejs'
 
                     }
