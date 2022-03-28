@@ -64,7 +64,7 @@ pipeline {
                     steps {
                         script {
                             sh "docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running"
-                            result = readFile('docker_running').trim().toInteger()
+                            int result = readFile('docker_running').trim().toInteger()
                             println result
 
                             if (result == 2) {
