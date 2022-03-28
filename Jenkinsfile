@@ -64,7 +64,7 @@ pipeline {
                     steps {
                         script {
                             sh "docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running"
-                            int result = readFile('docker_running').trim().toInteger()
+                            result = readFile('docker_running').trim()
                             println result
 
                             if (result == 2) {
@@ -72,11 +72,11 @@ pipeline {
                             }
                             else if (result > 2) {
                                 println "ERROR: please the env. There are more containers running "
-                                currentBuild.result = 'FAILED'
+                                //currentBuild.result = 'FAILED'
                             }
                             else {
                                 println "ERROR: the container is not running"
-                                currentBuild.result = 'FAILED'
+                                //currentBuild.result = 'FAILED'
                             }
                         }
 
@@ -98,11 +98,11 @@ pipeline {
                             }
                             else if (result > 2) {
                                 println "ERROR: please the env. There are more containers running on prod "
-                                currentBuild.result = 'FAILED'
+                                //currentBuild.result = 'FAILED'
                             }
                             else {
                                 println "ERROR: the container is not running on prod"
-                                currentBuild.result = 'FAILED'
+                                //currentBuild.result = 'FAILED'
                             }
                         }
 
