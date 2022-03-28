@@ -92,13 +92,14 @@ pipeline {
                             withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
                                 // Clean old containers
                                 sh "\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running)"
-                                int result = readFile('docker_running').trim() as int
+                                result = readFile('docker_running').trim()
+                                int res = result as int
                                 println result
                             }
-                            if (result == 2) {
+                            if (res == 2) {
                                 println "The nodejs container on prod is up and running"
                             }
-                            else if (result > 2) {
+                            else if (res > 2) {
                                 println "ERROR: please the env. There are more containers running on prod "
                                 //currentBuild.result = 'FAILED'
                             }
