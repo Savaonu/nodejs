@@ -92,8 +92,9 @@ pipeline {
                                 // Clean old containers
                                 sh "\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running)"
                                 result = readFile('docker_running').trim()
+                                println result
                             }
-                            if (result != null) {
+                            if (result == 2) {
                                 println "The nodejs container on prod is up and running"
                             }
                             else if (result > 2) {
