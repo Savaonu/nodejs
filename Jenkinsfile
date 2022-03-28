@@ -92,7 +92,7 @@ pipeline {
                             withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
                                 // Clean old containers
                                 sh "\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running)"
-                                result = readFile('docker_running').trim()
+                                int result = readFile('docker_running').trim() as int
                                 println result
                             }
                             if (result == 2) {
