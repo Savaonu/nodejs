@@ -63,9 +63,9 @@ pipeline {
                 stage('Check containers test ') {
                     steps {
                         script {
-                            //sh "docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running"
-                            //result = readFile('docker_running').trim()
-                            result = "2"
+                            sh "docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running"
+                            result = readFile('docker_running').trim()
+                            // result = "2"
                             int res = result as int
                             println result
                             println res
