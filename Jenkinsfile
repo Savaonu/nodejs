@@ -72,9 +72,11 @@ pipeline {
                             }
                             else if ($result > 2) {
                                 echo "ERROR: please the env. There are more containers running "
+                                currentBuild.result = 'FAILURE'
                             }
                             else {
                                 println "ERROR: the container is not running"
+                                currentBuild.result = 'FAILURE'
                             }
                         }
 
@@ -96,9 +98,11 @@ pipeline {
                             }
                             else if (result > 2) {
                                 echo "ERROR: please the env. There are more containers running on prod "
+                                currentBuild.result = 'FAILURE'
                             }
                             else {
                                 echo "ERROR: the container is not running on prod"
+                                currentBuild.result = 'FAILURE'
                             }
                         }
 
