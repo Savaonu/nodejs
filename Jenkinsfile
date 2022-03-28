@@ -97,7 +97,7 @@ pipeline {
                             if ( result == 2) {
                                 echo "The nodejs container on prod is up and running"
                             }
-                            else if (result > 2) {
+                            else if (result > 3) {
                                 println result
                                 echo "ERROR: please the env. There are more containers running on prod "
                                 currentBuild.result = 'ABORTED'
