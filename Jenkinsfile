@@ -65,21 +65,17 @@ pipeline {
                         script {
                             sh "docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running"
                             result = readFile('docker_running').trim()
-                            // result = "2"
                             int res = result as int
-                            println result
-                            println res
-
                             if (res == 2) {
                                 println "The nodejs container is up and running"
                             }
                             else if (res > 2) {
                                 println "ERROR: please the env. There are more containers running "
-                                //currentBuild.result = 'FAILED'
+                                currentBuild.result = 'FAILED'
                             }
                             else {
                                 println "ERROR: the container is not running"
-                                //currentBuild.result = 'FAILED'
+                                currentBuild.result = 'FAILED'
                             }
                         }
 
@@ -95,20 +91,17 @@ pipeline {
                                 // Clean old containers
                                 sh "\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running_prod)"
                                 result = readFile('docker_running_prod').trim()
-                                //result = "2"
                                 int res = result as int
-                                println result
-                                println res
                                 if (res == 2) {
                                     println "The nodejs container is up and running"
                                 }
                                 else if (res > 2) {
                                     println "ERROR: please the env. There are more containers running "
-                                    //currentBuild.result = 'FAILED'
+                                    currentBuild.result = 'FAILED'
                                 }
                                 else {
                                     println "ERROR: the container is not running"
-                                    //currentBuild.result = 'FAILED'
+                                    currentBuild.result = 'FAILED'
                             }
                             }
                         }
