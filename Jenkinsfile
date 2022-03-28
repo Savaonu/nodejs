@@ -67,10 +67,10 @@ pipeline {
                             result = readFile('docker_running').trim()
                             println result
 
-                            if ( result != null) {
+                            if (result != null) {
                                 println "The nodejs container is up and running"
                             }
-                            else if ($result > 2) {
+                            else if (result > 2) {
                                 echo "ERROR: please the env. There are more containers running "
                                 currentBuild.result = 'ABORTED'
                             }
@@ -94,7 +94,7 @@ pipeline {
                                 result = readFile('docker_running').trim()
                                 println result
                             }
-                            if ( result == 2) {
+                            if (result == 2) {
                                 echo "The nodejs container on prod is up and running"
                             }
                             else if (result > 3) {
