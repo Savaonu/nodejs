@@ -72,11 +72,11 @@ pipeline {
                             }
                             else if ($result > 2) {
                                 echo "ERROR: please the env. There are more containers running "
-                                currentBuild.result = 'FAILURE'
+                                currentBuild.result = 'ABORTED'
                             }
                             else {
                                 println "ERROR: the container is not running"
-                                currentBuild.result = 'FAILURE'
+                                currentBuild.result = 'ABORTED'
                             }
                         }
 
@@ -98,12 +98,13 @@ pipeline {
                                 echo "The nodejs container on prod is up and running"
                             }
                             else if (result > 2) {
+                                println result
                                 echo "ERROR: please the env. There are more containers running on prod "
-                                currentBuild.result = 'FAILURE'
+                                currentBuild.result = 'ABORTED'
                             }
                             else {
                                 echo "ERROR: the container is not running on prod"
-                                currentBuild.result = 'FAILURE'
+                                currentBuild.result = 'ABORTED'
                             }
                         }
 
