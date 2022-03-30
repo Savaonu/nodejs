@@ -118,7 +118,7 @@ pipeline {
                 stage('Clean image pushed to Dockerhub'){
                     steps {
                         // Delete the image pushed to Dockehub
-                        sh "docker rmi --force ${dockerhub_image}"
+                        sh "docker rmi --force savaonu/${params.image_name}"
                     }
                 }
                 stage('Email'){
