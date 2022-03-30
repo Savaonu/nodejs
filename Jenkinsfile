@@ -1,9 +1,11 @@
 pipeline {
     environment {
-        image_name = "nodejs"
-        container_name = "my_nodejs_app"
-        dockerhub_image = "savaonu/${image_name}"
         prod_srv = "192.168.0.17"
+    }
+    parameters {
+        string(name: 'image_name', defaultValue: 'nodejs', description: 'Name of the image')
+        string(name: 'container_name', defaultValue: 'my_nodejs_app', description: 'Name of the container')
+
     }
     agent {
             label "lin_node"
@@ -27,18 +29,18 @@ pipeline {
         stage('Build Docker image and create container'){
             steps {
                 // Build Image
-                sh "docker build -t ${image_name} ."
+                sh "docker build -t ${params.image_name} ."
                 // sh "docker build ."
 
                 // Create container
-                sh "docker run -p 3000:3000 -d --name ${container_name} ${image_name}"
+                sh "docker run -p 3000:3000 -d --name ${params.container_name} ${params.image_name}"
             }
         }
         stage('Deploy to Dockerhub'){
             steps {
                 // Push to Dockerhub repo
                 withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
-                    sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${image_name} ${dockerhub_image}"
+                    sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${params.image_name} ${repo_username}/${params.image_name}"
                 }
             }
         }
@@ -49,9 +51,9 @@ pipeline {
                     // Clean old containers
                     sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} \"bash -s\" < ./cleanup.sh"
                     // Copy the image to 'prod'
-                    sh "docker save ${image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
+                    sh "docker save ${params.image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
                     // Start app on 'prod'
-                    sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${container_name} ${image_name}"
+                    sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${params.container_name} ${params.image_name}"
                 }
                 
 
