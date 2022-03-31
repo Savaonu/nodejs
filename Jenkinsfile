@@ -44,9 +44,10 @@ pipeline {
                          sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${params.image_name} ${repo_username}/${params.image_name}"
                          echo "Deployed successfully on Dockerhub"
                      } 
-                } catch(error) {
-                    echo " Deploy failed"
-                    throw
+                } 
+                catch(error) {
+                    echo "Deploy failed"
+                    currentBuild.result = 'FAILURE'
                     /*retry(2) {
                         echo "Retry deploy"
                         // Push to Dockerhub repo
