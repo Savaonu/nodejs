@@ -38,6 +38,7 @@ pipeline {
             }
         }
         stage('Deploy to Dockerhub'){
+            steps {
                 try {
                     // Push to Dockerhub repo
                      withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
@@ -57,6 +58,7 @@ pipeline {
 
                     }*/
                 }
+            }
             
         }
         stage('Deploy to prod'){
