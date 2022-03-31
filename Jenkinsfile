@@ -1,7 +1,7 @@
 pipeline {
     environment {
         prod_srv = "192.168.0.17"
-        docker_hub_cred = credentials('ae4a797f-6a03-4dc7-874f-c6683cc2fcba')
+        DOCKER_HUB_CRED = credentials('ae4a797f-6a03-4dc7-874f-c6683cc2fcba')
     }
     parameters {
         string(name: 'image_name', defaultValue: 'nodejs', description: 'Name of the image')
@@ -40,9 +40,9 @@ pipeline {
         stage('Deploy to Dockerhub'){
             steps {
                 // Push to Dockerhub repo
-                withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
-                    sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${params.image_name} ${repo_username}/${params.image_name}"
-                }
+                //withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
+                    sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${DOCKER_HUB_CRED_USR} ${DOCKER_HUB_CRED_PSW} ${params.image_name} ${repo_username}/${params.image_name}"
+                //}
             }
         }
         stage('Deploy to prod'){
@@ -119,7 +119,7 @@ pipeline {
                 stage('Clean image pushed to Dockerhub'){
                     steps {
                         // Delete the image pushed to Dockehub
-                        sh "docker rmi --force ${docker_hub_cred_USR}/${params.image_name}"
+                        sh "docker rmi --force ${DOCKER_HUB_CRED_USR}/${params.image_name}"
                     }
                 }
                 stage('Email'){
