@@ -58,7 +58,9 @@ pipeline {
 
                     }*/
                 }
-                step(echo "caca")
+                script {
+                    println "caca"
+                }
             }
             
         }
