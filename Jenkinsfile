@@ -48,21 +48,29 @@ pipeline {
                         } 
                      } 
                     catch(error) {
-                        echo "Deploy failed"
-                        currentBuild.result = 'FAILURE'
-                        /*retry(2) {
+                        retry(2) {
                             echo "Retry deploy"
                             // Push to Dockerhub repo
                             withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
                             sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${params.image_name} ${repo_username}/${params.image_name}"
                             }
 
-                        }*/
+                        }
+                        echo "Deploy failed"
+                        //currentBuild.result = 'FAILURE'
+
+                        }
                     }
-
-
                 }
                 
+            }
+            post {
+                failure {
+                     // Info 
+                    echo "Deployed failed after retries also"
+                  }
+
+
             }
             
         }
