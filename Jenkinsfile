@@ -1,11 +1,11 @@
 pipeline {
     environment {
-        prod_srv = "192.168.0.17"
         DOCKER_HUB_CRED = credentials('ae4a797f-6a03-4dc7-874f-c6683cc2fcba')
     }
     parameters {
         string(name: 'image_name', defaultValue: 'nodejs', description: 'Name of the image')
         string(name: 'container_name', defaultValue: 'my_nodejs_app', description: 'Name of the container')
+        string(name: 'prod_srv', defaultValue: '192.168.0.17', description: "Productive environment")
 
     }
     agent {
@@ -50,11 +50,11 @@ pipeline {
                 // Transfer the image to prod env 
                 withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
                     // Clean old containers
-                    sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} \"bash -s\" < ./cleanup.sh"
+                    sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${params.prod_srv} \"bash -s\" < ./cleanup.sh"
                     // Copy the image to 'prod'
-                    sh "docker save ${params.image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${prod_srv} docker load"
+                    sh "docker save ${params.image_name} | gzip| sshpass -p ${prod_passw} ssh ${prod_user}@${params.prod_srv} docker load"
                     // Start app on 'prod'
-                    sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker run -p 3000:3000 -d --name ${params.container_name} ${params.image_name}"
+                    sh "sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${params.prod_srv} docker run -p 3000:3000 -d --name ${params.container_name} ${params.image_name}"
                 }
                 
 
@@ -92,7 +92,7 @@ pipeline {
                         script {
                             withCredentials([usernamePassword(credentialsId: 'prod_user', passwordVariable: 'prod_passw', usernameVariable: 'prod_user')]) {
                                 // Clean old containers
-                                sh "\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running_prod)"
+                                sh "\$(sshpass -p ${prod_passw} ssh -o StrictHostKeyChecking=no ${prod_user}@${params.prod_srv} docker ps -f status=running  -f name=my_nodejs_app | wc -l > docker_running_prod)"
                                 result = readFile('docker_running_prod').trim()
                                 int res = result as int
                                 if (res == 2) {
