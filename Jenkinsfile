@@ -59,11 +59,11 @@ pipeline {
                         echo "Deploy failed"
                         //currentBuild.result = 'FAILURE'
 
-                        }
                     }
                 }
-                
             }
+                
+            
             post {
                 failure {
                      // Info 
