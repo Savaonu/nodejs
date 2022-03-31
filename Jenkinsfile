@@ -48,6 +48,7 @@ pipeline {
                      } 
                 } catch(error) {
                     echo " Deploy failed"
+                    throw
                     /*retry(2) {
                         echo "Retry deploy"
                         // Push to Dockerhub repo
