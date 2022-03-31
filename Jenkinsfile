@@ -39,10 +39,14 @@ pipeline {
         }
         stage('Deploy to Dockerhub'){
             steps {
-                // Push to Dockerhub repo
-                withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
-                    sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${params.image_name} ${repo_username}/${params.image_name}"
+                retry(3) {
+                    // Push to Dockerhub repo
+                     withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
+                         sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${repo_username} ${repo_passw} ${params.image_name} ${repo_username}/${params.image_name}"
+                     }               
                 }
+                echo "No answer from Dockerhub - could not deploy the image"
+                currentBuild.result = 'FAILED'
             }
         }
         stage('Deploy to prod'){
