@@ -58,6 +58,7 @@ pipeline {
 
                     }*/
                 }
+                step(echo "caca")
             }
             
         }
