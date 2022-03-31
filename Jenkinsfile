@@ -1,6 +1,7 @@
 pipeline {
     environment {
         prod_srv = "192.168.0.17"
+        docker_hub_cred = credentials('ae4a797f-6a03-4dc7-874f-c6683cc2fcba')
     }
     parameters {
         string(name: 'image_name', defaultValue: 'nodejs', description: 'Name of the image')
@@ -118,7 +119,7 @@ pipeline {
                 stage('Clean image pushed to Dockerhub'){
                     steps {
                         // Delete the image pushed to Dockehub
-                        sh "docker rmi --force savaonu/${params.image_name}"
+                        sh "docker rmi --force ${docker_hub_cred_USR}/${params.image_name}"
                     }
                 }
                 stage('Email'){
