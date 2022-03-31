@@ -41,6 +41,7 @@ pipeline {
             steps {
                 // Push to Dockerhub repo
                 //withCredentials([usernamePassword(credentialsId: 'ae4a797f-6a03-4dc7-874f-c6683cc2fcba', passwordVariable: 'repo_passw', usernameVariable: 'repo_username')]) {
+                    sh "echo ${DOCKER_HUB_CRED_USR}"
                     sh "chmod +x ./deploy.sh && sh -x ./deploy.sh ${DOCKER_HUB_CRED_USR} ${DOCKER_HUB_CRED_PSW} ${params.image_name} ${repo_username}/${params.image_name}"
                 //}
             }
